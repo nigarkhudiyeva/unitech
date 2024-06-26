@@ -25,6 +25,8 @@ dependencies {
     implementation 'de.mkammerer:argon2-jvm:2.11'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.iban4j:iban4j:3.2.8-RELEASE'
+    testImplementation 'org.mockito:mockito-core:5.10.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.10.0'
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

@@ -16,5 +16,5 @@ public interface AccountRepository extends JpaRepository<AccountEntity, String> 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<AccountEntity> findByUserIdAndIbanAndStatus(Long userId, String iban, AccountStatus status);
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Optional<AccountEntity> findByIbanAndStatus(String iban, AccountStatus status);
+    Optional<AccountEntity> findByIban(String iban);
 }

@@ -4,6 +4,7 @@ import az.unibank.uniTech.v1.entity.AccountEntity;
 import az.unibank.uniTech.v1.entity.AccountStatus;
 import az.unibank.uniTech.v1.exception.InsufficientFundsException;
 import az.unibank.uniTech.v1.exception.InvalidAccountException;
+import az.unibank.uniTech.v1.exception.TransferException;
 import az.unibank.uniTech.v1.mapper.AccountMapper;
 import az.unibank.uniTech.v1.model.AccountViewResponse;
 import az.unibank.uniTech.v1.model.CreateAccountReponse;
@@ -44,15 +45,23 @@ public class AccountService {
     @Transactional
     public void transfer(Long userId, TransferRequest request) {
         AccountEntity fromAccount = accountRepository.findByUserIdAndIbanAndStatus(userId, request.getFrom(), AccountStatus.ACTIVE)
-                .orElseThrow(() -> new InvalidAccountException(request.getFrom() + " is not valid "));
-        AccountEntity toAccount = accountRepository.findByIbanAndStatus(request.getTo(), AccountStatus.ACTIVE)
-                .orElseThrow(() -> new InvalidAccountException(request.getTo() + " is not valid "));
+                .orElseThrow(() -> new InvalidAccountException(request.getFrom() + " is not valid"));
+        AccountEntity toAccount = accountRepository.findByIban(request.getTo())
+                .orElseThrow(() -> new InvalidAccountException(request.getTo() + " is not valid"));
+
+        if(toAccount.getStatus() == AccountStatus.INACTIVE) {
+            throw new TransferException(toAccount.getIban() + " is INACTIVE");
+        }
 
         BigDecimal amountToTransfer = request.getAmount();
         BigDecimal fromAccountBalance = fromAccount.getBalance();
 
+        if(fromAccount.getIban().equals(toAccount.getIban())) {
+            throw new TransferException("You can't transfer to same account");
+        }
+
         if (fromAccountBalance.compareTo(amountToTransfer) < 0) {
-            throw new InsufficientFundsException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds account balance " + fromAccountBalance);
         }
 
         fromAccount.setBalance(fromAccountBalance.subtract(amountToTransfer));
