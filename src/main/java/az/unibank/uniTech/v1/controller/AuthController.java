@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public LoginUserResponse register(@RequestBody @Valid LoginUserRequest request) {
+    public LoginUserResponse login(@RequestBody @Valid LoginUserRequest request) {
         return userService.login(request);
     }
 
