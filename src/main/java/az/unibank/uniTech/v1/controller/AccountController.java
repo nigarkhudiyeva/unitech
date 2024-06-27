@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("v1/accounts")
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
